@@ -293,15 +293,34 @@ else:
             default_s = 90 + (t_reps * 5)
 
         with st.expander(f"{icon} {ex['name']}", expanded=False):
-            # --- A. Swap Button ---
+            
+# --- A. Swap Button ---
             if week_num == 1:
                 if st.button("🔄 Swap Exercise", key=btn_id):
+                    # 1. Get current names to avoid duplicates
                     all_week_names = [m['name'] for d_v in prog["weeks"]["Week 1"].values() if isinstance(d_v, list) for m in d_v]
+                    
+                    # 2. Get the new move from the engine
                     new_move_data = engine.get_single_swap(ex['name'], all_week_names)
+                    
                     if new_move_data:
+                        # 3. Update the local variable
                         for w in range(1, 7):
                             prog["weeks"][f"Week {w}"][day_key][i] = new_move_data
+                        
+                        # 4. Save to Cloud
                         save_program_to_cloud(user, prog, week_num, day_num)
+                        
+                        # 5. FORCE REFRESH: Delete the cached program and the input values
+                        if 'current_program' in st.session_state:
+                            del st.session_state.current_program
+                        
+                        # Clear the inputs specifically for this slot
+                        if f"w_in_{unique_key_suffix}" in st.session_state:
+                            del st.session_state[f"w_in_{unique_key_suffix}"]
+                        if f"r_in_{unique_key_suffix}" in st.session_state:
+                            del st.session_state[f"r_in_{unique_key_suffix}"]
+
                         st.rerun()
 
 # --- Rest Timer UI (Inside an Expander) ---
