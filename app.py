@@ -65,7 +65,6 @@ if not st.session_state['logged_in']:
     st.stop()
 
 # --- LOGGED IN CONTENT ---
-# --- LOGGED IN CONTENT ---
 user = st.session_state['username']
 user_data = get_user_data(user)
 
@@ -161,236 +160,259 @@ if not has_program:
 
 # --- BRANCH 2: ACTIVE TRAINING ---
 else:
-    # 1. LAZY LOAD JSON
-    # We already fetched user_data at the top of the script!
+    # 1. INITIALIZE LIST IMMEDIATELY
+    # This prevents NameError because it now exists even if the loop is empty
+    session_results = []
+
+    # 2. LAZY LOAD JSON
     if 'current_program' not in st.session_state:
         st.session_state.current_program = user_data['program_data']
     
     prog = st.session_state.current_program
 
-# 2. THE SMART GPS
-    active_week, active_day = 1, 1 # Defaults
-    found_spot = False
-    
-    for w_idx in range(1, 7):
-        w_key = f"Week {w_idx}"
-        # Filter keys to find how many "Days" are in this week
-        days_in_week = [k for k in prog['weeks'][w_key].keys() if "Day" in k and "_status" not in k]
-        
-        for d_idx in range(1, len(days_in_week) + 1):
-            d_key = f"Day {d_idx}"
-            if prog['weeks'][w_key].get(f"{d_key}_status") != "completed":
-                active_week, active_day = w_idx, d_idx
-                found_spot = True
-                break
-        if found_spot: break
+    # 3. THE SMART GPS
+    week_num = user_data['current_week']
+    day_num = user_data['current_day']
 
-    # Sync to the variables the rest of the app uses
-    week_num = active_week
-    day_num = active_day
-    # Initialize Engine for Swaps/Reports
+    # 4. Handle Program Completion
+    if week_num > 6:
+        st.balloons()
+        st.title("🏆 Program Complete!")
+        st.write("You've finished the 6-week cycle. Ready to reset?")
+        if st.button("♻️ Reset & Start New Cycle"):
+            save_program_to_cloud(user, prog, 1, 1, has_prog=0)
+            st.session_state.clear()
+            st.rerun()
+        st.stop()
+
+    # 5. DEFINE CURRENT SESSION DATA
+    day_key = f"Day {day_num}"
+    week_key = f"Week {week_num}"
+    exs = prog['weeks'][week_key][day_key]
+
+    # 6. Initialize Engine
     from engine import HITEngine
-    # Logic to approximate original settings if they aren't in state
     settings = st.session_state.get("user_settings", {"days": 3, "eq": ["Dumbbells", "Cables", "Selectorized"], "rep_range": "8-12"})
     engine = HITEngine(settings['days'], settings['eq'], settings['rep_range'])
 
-    # SIDEBAR VOLUME REPORT
-    # Filter: Only grab exercise names from dictionary values that are actually lists
-    all_week_names = []
-    week1_data = st.session_state.current_program['weeks']['Week 1']
-    
-    for key, content in week1_data.items():
-        if isinstance(content, list):
-            for ex in content:
-                all_week_names.append(ex['name'])
+    # --- 7. SIDEBAR --- Placeholder
 
-    report = engine.calculate_volume_report(all_week_names)
-    
     with st.sidebar:
-        st.subheader("📊 Weekly Stimulus")
-        st.bar_chart(report)
-        if st.button("🚪 Logout"):
-            st.session_state.clear()
-            st.rerun()
+        st.subheader("📊 Average Weekly Stimulus")
+        
+        tracked_muscles = [
+            "Pectorals", "Upper Back", "Quads", "Hamstrings/Glutes", 
+            "Front Delts", "Side Delts", "Rear Delts", "Triceps", "Biceps"
+        ]
+        
+        # 1. Get ALL exercise names from the entire program
+        all_program_names = [
+            ex['name'] 
+            for w_val in prog['weeks'].values() 
+            for d_val in w_val.values() 
+            if isinstance(d_val, list) 
+            for ex in d_val
+        ]
 
-        st.divider()
+        # 2. Calculate locally
+        local_report = {m: 0.0 for m in tracked_muscles}
+        for name in all_program_names:
+            ex_data = next((x for x in MASTER_LIBRARY if x['name'] == name), None)
+            if ex_data:
+                for m, val in ex_data.get('impact', {}).items():
+                    if m in local_report:
+                        local_report[m] += val
+                for m, val in ex_data.get('secondary', {}).items():
+                    if m in local_report:
+                        local_report[m] += val
+        
+        # 3. DIVIDE BY 6 to get the Weekly Average
+        # This brings a "12" back down to a "2"
+        weekly_avg_report = {m: round(val / 6, 1) for m, val in local_report.items()}
+        
+        st.bar_chart(weekly_avg_report)
+
+
         st.subheader("📈 Strength Trends")
         
-        # 1. Get a unique list of all exercise names in the program
-        # We use a set to avoid duplicates
-        ex_names = sorted(list(set(
-            ex['name'] 
-            for w in prog['weeks'].values() 
-            for d in w.values() 
-            if isinstance(d, list) 
-            for ex in d
-        )))
-        
-        selected_graph_ex = st.selectbox("Select Exercise to Track", ex_names)
+        # 1. Get unique names of all exercises currently in your 6-week block
+        ex_names_in_prog = sorted(list(set(all_program_names)))
+        selected_graph_ex = st.selectbox("Select Exercise to Track", ex_names_in_prog)
 
-        # 2. Extract the e1rm for that exercise for Weeks 1 through 6
-        weeks_axis = []
-        e1rm_axis = []
-        
+        # 2. Build the data points by scanning each week
+        trend_data = []
         for w_idx in range(1, 7):
-            w_key = f"Week {w_idx}"
+            wk_key = f"Week {w_idx}"
             found_in_week = False
             
-            # Look through every day in that week
-            for d_key, d_content in prog['weeks'][w_key].items():
-                if isinstance(d_content, list):
-                    for ex in d_content:
-                        if ex['name'] == selected_graph_ex:
-                            weeks_axis.append(w_key)
-                            e1rm_axis.append(ex.get('e1rm', 0))
+            # Look through every day of that specific week
+            for d_key, d_val in prog['weeks'][wk_key].items():
+                if isinstance(d_val, list):
+                    for ex_entry in d_val:
+                        if ex_entry['name'] == selected_graph_ex:
+                            # Pull the e1RM (it starts at 0 and grows as you finish sessions)
+                            trend_data.append({
+                                "Week": f"W{w_idx}", 
+                                "e1RM (kg)": ex_entry.get('e1rm', 0)
+                            })
                             found_in_week = True
-                            break
+                            break # Found it for this week, move to the next week
                 if found_in_week: break
-        
-        # 3. Plot the data
-        if e1rm_axis:
-            # We create a dictionary for the chart
-            chart_data = {"Week": weeks_axis, "e1RM (kg)": e1rm_axis}
-            st.line_chart(data=chart_data, x="Week", y="e1RM (kg)")
 
-    day_key = f"Day {day_num}"
-    week_key = f"Week {week_num}"
-    
-    # Grab the current session exercises
-    exs = st.session_state.current_program['weeks'][week_key][day_key]
+        # 3. Plot it
+        if trend_data:
+            import pandas as pd
+            df_trend = pd.DataFrame(trend_data)
+            
+            # We set 'Week' as the index so it shows up on the X-axis
+            st.line_chart(df_trend.set_index("Week"))
+            
+            # Helpful hint for Discovery Mode
+            if df_trend["e1RM (kg)"].max() == 0:
+                st.caption("ℹ️ Complete a session to see your first data point.")
+        else:
+            st.info("Select an exercise to see your progression.")
 
-    # UI HEADER
+    # 8. UI HEADER
     has_baseline = any(ex.get('e1rm', 0) > 0 for ex in exs)
     st.title("🧪 Discovery Mode" if not has_baseline else f"🚀 Training Mode: W{week_num}")
     st.subheader(f"Session: {day_key}")
 
-    session_results = []
-
-    # --- START OF THE EXERCISE LOOP ---
+# --- START OF THE EXERCISE LOOP ---
     for i, ex in enumerate(exs):
-        btn_id = f"swp_{i}_{week_num}_{day_num}_{ex['name'].replace(' ', '_')}"
-        
-        # Check if this is a Density exercise
+        unique_key_suffix = f"w{week_num}_d{day_num}_{i}" # Defined early to prevent NameErrors
+        btn_id = f"swp_{unique_key_suffix}_{ex['name'].replace(' ', '_')}"
         is_density = ex.get('prog_type') == "density"
         icon = "⏱️" if is_density else "🏋️"
+        
+        # 1. Initialize Rest Time
+        if is_density:
+            default_s = 60 if week_num == 1 else 300
+        else:
+            t_reps = ex.get('target_reps', 10)
+            default_s = 90 + (t_reps * 5)
 
         with st.expander(f"{icon} {ex['name']}", expanded=False):
-            
-            # --- 1. SMART SWAP BUTTON ---
+            # --- A. Swap Button ---
             if week_num == 1:
                 if st.button("🔄 Swap Exercise", key=btn_id):
-                    all_week_names = []
-                    for d_k, d_v in st.session_state.current_program["weeks"]["Week 1"].items():
-                        if isinstance(d_v, list):
-                            for m in d_v:
-                                all_week_names.append(m['name'])
-                    
+                    all_week_names = [m['name'] for d_v in prog["weeks"]["Week 1"].values() if isinstance(d_v, list) for m in d_v]
                     new_move_data = engine.get_single_swap(ex['name'], all_week_names)
-                    
                     if new_move_data:
                         for w in range(1, 7):
-                            st.session_state.current_program["weeks"][f"Week {w}"][day_key][i] = new_move_data
-                        
-                        save_program_to_cloud(user, st.session_state.current_program, week_num, day_num)
-                        
-                        st.success(f"Optimized swap: {new_move_data['name']}")
+                            prog["weeks"][f"Week {w}"][day_key][i] = new_move_data
+                        save_program_to_cloud(user, prog, week_num, day_num)
                         st.rerun()
+
+# --- Rest Timer UI (Inside an Expander) ---
+
+            with st.expander(f"⏱️ Rest and Work Timer"):
+                
+                @st.fragment(run_every=1.0)
+                def timer_component(d_s, k):
+                    # State initialization for this specific timer
+                    if f"active_{k}" not in st.session_state:
+                        st.session_state[f"active_{k}"] = False
+                        st.session_state[f"endtime_{k}"] = 0
+
+                    c1, c2 = st.columns([2, 1])
+                    with c1:
+                        # Value persists even when expander closes
+                        u_timer = st.number_input("Seconds", value=d_s, key=f"in_{k}")
+                    with c2:
+                        st.write("") 
+                        btn_col1, btn_col2 = st.columns(2)
+                        
+                        # START
+                        if btn_col1.button("▶️", key=f"go_{k}"):
+                            st.session_state[f"endtime_{k}"] = time.time() + u_timer
+                            st.session_state[f"active_{k}"] = True
+                        
+                        # STOP
+                        if btn_col2.button("🛑", key=f"stop_{k}"):
+                            st.session_state[f"active_{k}"] = False
+                            st.rerun()
+
+                    t_placeholder = st.empty()
+                    if st.session_state[f"active_{k}"]:
+                        remaining = int(st.session_state[f"endtime_{k}"] - time.time())
+                        if remaining > 0:
+                            t_placeholder.subheader(f"⏳ {remaining//60:02d}:{remaining%60:02d}")
+                        else:
+                            t_placeholder.success("Done!")
+                            st.session_state[f"active_{k}"] = False
                     else:
-                        st.error("No suitable alternative found in the library.")
+                        t_placeholder.info("Timer Ready")
 
-            # --- 2. DYNAMIC TIMER & TARGET DISPLAY ---
+                # Call the fragment inside the expander
+                timer_component(default_s, unique_key_suffix)
+
+            # --- C. New Instructions Block ---
+            # --- Instructions Block (Sleek UI) ---
             if is_density:
-                # Bodyweight UI: 1 min Discovery (W1) or 5 min Density (W2+)
                 if week_num == 1:
-                    st.info("🎯 **Discovery:** Max reps in **1 Minute**.")
-                    default_s = 60
+                    st.warning("⚠️ **Discovery Mode — Find your Limits**")
+                    st.markdown(f"**The Mission:** Perform as many high-quality reps as possible in **1 minute**. This baseline determines your path for the next 5 weeks.")
                 else:
-                    st.success(f"🔥 **Goal:** {ex['target_reps']} Reps in **5 Minutes**.")
-                    default_s = 300
-                timer_label = "Start Work Block"
+                    st.success(f"🔥 **Goal: Week {week_num} Density**")
+                    # Using a 'subheader' or bigger text for the main goal
+                    st.markdown(f"### Target: **{ex['target_reps']} Reps** in **5 Minutes**")
             else:
-                # Weighted UI: Standard Rep Targets
-                st.write(f"🎯 **Target:** {ex['target_reps']} reps @ {ex.get('target_weight', 0)}kg")
-                t_reps = ex['target_reps']
-                default_s = 180 if t_reps <= 6 else 120 if t_reps <= 12 else 90
-                timer_label = f"Rest Timer ({default_s//60}m suggested)"
+                if week_num == 1:
+                    st.warning("⚠️ **Discovery Mode — Find your Limits**")
+                    col_a, col_b = st.columns(2)
+                    col_a.write(f"**Rep Target:** {ex['target_reps']}")
+                    col_b.write(f"**Rest:** {default_s//60}m {default_s%60}s")
+                    
+                    st.write("1. Work up in weight, performing the target reps at each step.")
+                    st.info(f"2. Capture the weight where you reach **absolute failure** as close to **{ex['target_reps']} reps** as possible.")
+                else:
+                    st.success(f"🏋️ **Target — Work Time**")
+                    # Highlight the specific weight and rep goal
+                    st.markdown(f"### **{ex.get('target_weight', 0)}kg** for **{ex['target_reps']} Reps**")
+                    
+                    with st.container(border=True): # Adds a subtle box around the tip
+                        st.write("💡 *Outperform the target if you can. If time permits, attempt 2–3 sets, but record the results of your **first** set below.*")
+                    
+                    st.caption(f"⏱️ Recovery: {default_s//60}m {default_s%60}s rest is essential for peak intensity.")
 
-            with st.expander(f"⏱️ {timer_label}"):
-                t_col1, t_col2, t_col3 = st.columns([1, 1, 1])
-                with t_col1:
-                    user_timer = st.number_input("Time (sec)", value=default_s, step=30, key=f"t_in_{i}")
-                with t_col2:
-                    if st.button("▶️ Start", key=f"t_start_{i}", use_container_width=True):
-                        t_disp = st.empty()
-                        for t in range(user_timer, -1, -1):
-                            mm, ss = divmod(t, 60)
-                            t_disp.subheader(f"⏳ {mm:02d}:{ss:02d}")
-                            time.sleep(1)
-                        t_disp.success("🏁 Time's Up!" if is_density else "🔥 Set Start!")
-                with t_col3: 
-                    if st.button("⏹️ Stop/Reset", key=f"t_stop_{i}", use_container_width=True):
-                        st.rerun()
 
-            # --- 3. DATA ENTRY ---
+            # --- D. Data Entry ---
             if is_density:
-                # No weight input for bodyweight
-                r_act = st.number_input("Total Reps Achieved", key=f"r_in_{i}", step=1, value=0)
                 w_act = 0.0
+                r_act = st.number_input(
+                    "Total Reps Achieved", 
+                    key=f"r_in_{unique_key_suffix}", 
+                    step=1, 
+                    value=0
+                )
             else:
                 col_w, col_r = st.columns(2)
-                with col_w:
-                    w_act = st.number_input("Weight (kg)", key=f"w_in_{i}", step=2.5, value=float(ex.get('target_weight', 0)))
-                with col_r:
-                    r_act = st.number_input("Reps", key=f"r_in_{i}", step=1, value=int(ex.get('target_reps', 10)))
+                with col_w: 
+                    w_act = st.number_input(
+                        "Weight (kg)", 
+                        key=f"w_in_{unique_key_suffix}", 
+                        value=float(ex.get('target_weight', 0))
+                    )
+                with col_r: 
+                    r_act = st.number_input(
+                        "Reps", 
+                        key=f"r_in_{unique_key_suffix}", 
+                        value=int(ex.get('target_reps', 10))
+                    )
 
-            # Append results for the session_results list (used by Save & Finish button)
-            session_results.append({
-                "name": ex['name'],
-                "weight": w_act,
-                "reps": r_act,
-                "is_density": is_density
-            })
-
-# --- 2. INSTRUCTIONS ---
-            if is_density:
-                # DENSITY INSTRUCTIONS (Bodyweight)
-                if week_num == 1:
-                    st.info("⏱️ **Discovery Mode:** Perform as many reps as possible in **1 Minute**. Don't pace yourself—go for broke. This baseline sets your volume for the next 5 weeks.")
-                else:
-                    st.markdown(f"""
-                    ### 🎯 The Mission: **{ex['target_reps']} Reps**
-                    **Time Domain:** 5-Minute Block
-                    
-                    * Perform the target reps as quickly as possible.
-                    * Rest only as much as needed to keep your form perfect.
-                    * If you finish before 5 minutes, you've beaten the density goal!
-                    """)
-            else:
-                # STANDARD HIT INSTRUCTIONS (Weighted)
-                if not (has_baseline and ex.get('target_weight', 0) > 0):
-                    st.info("**Discovery Mode:** Find a weight that takes you to failure within your target rep range. This sets your baseline.")
-                else:
-                    st.metric("Suggested Load", f"{ex['target_weight']} kg")
-                    st.markdown(f"""
-                    ### 🎯 The Mission: **{ex['target_reps']} Reps**
-                    This is your **Main Working Set**. To trigger progress, you must give 100% effort here.
-                    
-                    **Warm-up:** 1-2 lighter sets (50% and 75% load) to prep.
-                    **The Rule:** Only the *first* set counts toward your progression math.
-                    """)
-            
-            # Store the data for the Save & Finish function
+            # COLLECT DATA
             session_results.append({
                 'name': ex['name'],
                 'weight': w_act, 
                 'reps': r_act, 
                 'target_reps': ex['target_reps'],
-                'is_density': is_density # Adding this flag makes the math step easier
+                'is_density': is_density
             })
-# --- FINISH SESSION ---
+
+  # --- 9. FINISH SESSION ---
     st.divider()
-    
-    # 1. SMART CHECK: Weighted needs Weight > 0; Density only needs Reps > 0
+
     all_filled = all(
         (res['reps'] > 0 and res['weight'] > 0) if not res.get('is_density') 
         else res['reps'] > 0 
@@ -402,88 +424,59 @@ else:
                  use_container_width=True, 
                  key=f"save_btn_w{week_num}_d{day_num}"):
         
-        prog = st.session_state.current_program
-        prog['weeks'][week_key][day_key + "_status"] = "completed"
-        
-        # ... [Your existing math logic for Brzycki and Density multipliers] ...
-
-        # Calculate next GPS spot
-        actual_days = [k for k in prog['weeks']["Week 1"].keys() if "Day" in k and "_status" not in k]
-        total_days_in_week = len(actual_days)
-        
-        if day_num < total_days_in_week:
-            new_day, new_week = day_num + 1, week_num
-        else:
-            new_day, new_week = 1, week_num + 1
-
-        # SAVE TO SUPABASE
-        save_program_to_cloud(user, prog, new_week, new_day)
-        
-        st.success(f"Session Saved to Cloud!")
-        st.balloons()
-        time.sleep(1)
-        st.rerun()
-        
-        # 2. UPDATE PROGRESSION (The Branching Logic)
+        # A. Update Progression Math (Locked to day_key)
         for res in session_results:
             if res.get('is_density'):
-                # --- DENSITY MATH (Bodyweight) ---
-                # If Week 1, this 'res['reps']' is our baseline seed.
+                # DENSITY MATH
+                # If W1, current reps is baseline. If W2+, we need to find the W1 discovery_reps.
                 if week_num == 1:
                     baseline = res['reps']
                 else:
-                    # Look back at Week 1 to find the original baseline
-                    # (This ensures calculations stay anchored to the discovery set)
-                    baseline = res.get('discovery_reps', res['reps'])
+                    # Look back at W1 for the same exercise to find the anchor
+                    w1_exs = prog['weeks']['Week 1'][day_key]
+                    baseline = next((e['discovery_reps'] for e in w1_exs if e['name'] == res['name']), res['reps'])
 
-                # Multipliers: W1=1.0x (1min), W2=3.0x (5min), W3=3.2x, W4=3.4x, W5=3.6x, W6=Deload
                 multipliers = {1: 1.0, 2: 3.0, 3: 3.2, 4: 3.4, 5: 3.6, 6: 3.4}
                 
+                # ONLY update this specific day across future weeks
                 for w_idx in range(week_num, 7):
-                    wk_key = f"Week {w_idx}"
-                    if wk_key not in prog['weeks']: continue
-                    
-                    for d_k, d_v in prog['weeks'][wk_key].items():
-                        if isinstance(d_v, list):
-                            for ex_entry in d_v:
-                                if ex_entry['name'] == res['name']:
-                                    # Save baseline in Week 1 slot for future lookup
-                                    if week_num == 1:
-                                        ex_entry['discovery_reps'] = baseline
-                                    
-                                    # Update Target Reps based on the baseline seed
-                                    # Example: 10 reps in 1 min becomes 32 reps in 5 mins for Week 3
-                                    ex_entry['target_reps'] = int(baseline * multipliers.get(w_idx, 3.0))
-                                    ex_entry['target_weight'] = 0.0
-                                    ex_entry['e1rm'] = baseline # Using reps as e1rm for trend tracking
-            
+                    target_wk = f"Week {w_idx}"
+                    for ex_entry in prog['weeks'][target_wk][day_key]:
+                        if ex_entry['name'] == res['name']:
+                            if week_num == 1: ex_entry['discovery_reps'] = baseline
+                            ex_entry['target_reps'] = int(baseline * multipliers.get(w_idx, 3.0))
+                            ex_entry['e1rm'] = baseline
             else:
-                # --- BRZYCKI MATH (Weighted) ---
+                # BRZYCKI MATH (Weighted)
                 e1rm = res['weight'] * (36 / (37 - res['reps']))
                 
+                # ONLY update this specific day across future weeks
                 for w_idx in range(week_num, 7):
-                    wk_key = f"Week {w_idx}"
-                    if wk_key not in prog['weeks']: continue
-                    for d_k, d_v in prog['weeks'][wk_key].items():
-                        if isinstance(d_v, list):
-                            for ex_entry in d_v:
-                                if ex_entry['name'] == res['name']:
-                                    ex_entry['e1rm'] = e1rm
-                                    new_w = e1rm * (37 - ex_entry['target_reps']) / 36
-                                    ex_entry['target_weight'] = round(new_w / 2.5) * 2.5
+                    target_wk = f"Week {w_idx}"
+                    for ex_entry in prog['weeks'][target_wk][day_key]:
+                        if ex_entry['name'] == res['name']:
+                            ex_entry['e1rm'] = e1rm
+                            new_w = e1rm * (37 - ex_entry['target_reps']) / 36
+                            ex_entry['target_weight'] = round(new_w / 2.5) * 2.5
 
-        # 3. DATABASE GPS & SAVE (Keep as is)
+        # B. Mark Status
+        prog['weeks'][week_key][day_key + "_status"] = "completed"
+
+        # C. Next GPS Spot
         actual_days = [k for k in prog['weeks']["Week 1"].keys() if "Day" in k and "_status" not in k]
-        total_days_in_week = len(actual_days)
-        
-        if day_num < total_days_in_week:
+        if day_num < len(actual_days):
             new_day, new_week = day_num + 1, week_num
         else:
             new_day, new_week = 1, week_num + 1
 
+        # D. Save to Supabase
         save_program_to_cloud(user, prog, new_week, new_day)
         
-        st.success(f"Session Saved! Next up: Week {new_week} Day {new_day}")
+        # E. FORCE REFRESH: Kill session state so it re-pulls fresh data from Cloud
+        if 'current_program' in st.session_state:
+            del st.session_state.current_program
+        
+        st.success("Session Saved to Cloud!")
         st.balloons()
         time.sleep(1)
         st.rerun()
