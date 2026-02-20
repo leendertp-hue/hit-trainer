@@ -88,13 +88,15 @@ if not has_program:
     goal = st.selectbox("Training Goal", ["Strength (5-8 reps)", "Hypertrophy (8-12 reps)", "Endurance (15-20 reps)"])
     rep_range = goal.split('(')[1].split(' ')[0] 
     low, high = map(int, rep_range.split('-'))
+     # 🟢 NEW: Beginner Mode Toggle
+    is_beginner = st.checkbox("Beginner Mode", help="Prioritizes stable machines and joint-friendly movements.")
     days = st.select_slider("Workout Days Per Week", options=[2, 3, 4, 5, 6, 7], value=3)
 
     if mode == "Auto-Generate Plan":
         eq = st.multiselect("Available Equipment", ["Selectorized", "Plate-Loaded", "Cables", "Dumbbells", "Barbell", "Bodyweight", "Sled Machine", "Smith Machine"])
         if st.button("🚀 Generate My Plan"):
             from engine import HITEngine
-            engine = HITEngine(days, eq, target_reps=rep_range)
+            engine = HITEngine(days, eq, target_reps=rep_range, beginner=is_beginner)
             result = engine.generate_program()
             new_program = result["program"]
             
@@ -293,7 +295,7 @@ else:
             default_s = 90 + (t_reps * 5)
 
         with st.expander(f"{icon} {ex['name']}", expanded=False):
-            
+
 # --- A. Swap Button ---
             if week_num == 1:
                 if st.button("🔄 Swap Exercise", key=btn_id):
