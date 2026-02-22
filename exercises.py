@@ -6,7 +6,6 @@ MASTER_LIBRARY = [
     # --- SELECTORIZED ---
     {"name": "Leg Extension", "impact": {"Quads": 1.0}, "secondary": {}, "equip": "Selectorized", "gentle": True},
     {"name": "Seated Leg Press (Horizontal)", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.4}, "equip": "Selectorized", "gentle": True},
-    {"name": "Sissy Squat Machine", "impact": {"Quads": 1.0}, "secondary": {}, "equip": "Selectorized", "gentle": True},
 
     # --- PLATE-LOADED / SLED ---
     {"name": "Leg Press (45-Degree Sled)", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.4, "Calves": 0.4}, "equip": "Plate-Loaded", "gentle": True},
@@ -16,11 +15,11 @@ MASTER_LIBRARY = [
     {"name": "Belt Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.5}, "equip": "Plate-Loaded", "gentle": True},
 
     # --- BARBELL ---
-    {"name": "Barbell Back Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6, "Upper Back": 0.4}, "equip": "Barbell", "gentle": False},
-    {"name": "Barbell Front Squat", "impact": {"Quads": 1.1}, "secondary": {"Upper Back": 0.7, "Hamstrings/Glutes": 0.3}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Back Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Front Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.3}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Walking Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Stationary Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Barbell", "gentle": False},
-    {"name": "Barbell Box Squat", "impact": {"Quads": 0.9}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Box Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
 
     # --- SMITH MACHINE ---
     {"name": "Smith Machine Squat", "impact": {"Quads": 1.1}, "secondary": {"Hamstrings/Glutes": 0.4}, "equip": "Smith Machine", "gentle": True},
@@ -38,7 +37,7 @@ MASTER_LIBRARY = [
 # --- BODYWEIGHT (Density & Discovery) ---
     {"name": "Air Squats", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.4}, "equip": "Bodyweight", "gentle": True},
     {"name": "Cyclist Squats (Heels Elevated)", "impact": {"Quads": 1.2}, "secondary": {}, "equip": "Bodyweight", "gentle": True},
-    {"name": "Sissy Squat (Bodyweight)", "impact": {"Quads": 1.3}, "secondary": {}, "equip": "Bodyweight", "gentle": False},
+    {"name": "Sissy Squat (Bodyweight)", "impact": {"Quads": 1}, "secondary": {}, "equip": "Bodyweight", "gentle": False},
     
     # Lunge Variations
     {"name": "Bodyweight Reverse Lunges", "impact": {"Quads": 0.9}, "secondary": {"Hamstrings/Glutes": 0.7}, "equip": "Bodyweight", "gentle": True},
@@ -67,7 +66,7 @@ MASTER_LIBRARY = [
 
     # --- BARBELL (The Heavy Hinges) ---
     {"name": "Barbell Romanian Deadlift (RDL)", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.5, "Forearms": 0.4}, "equip": "Barbell", "gentle": False},
-    {"name": "Stiff-Leg Deadlift", "impact": {"Hamstrings/Glutes": 1.3}, "secondary": {"Upper Back": 0.5}, "equip": "Barbell", "gentle": False},
+    {"name": "Stiff-Leg Deadlift", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.5}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Good Mornings", "impact": {"Hamstrings/Glutes": 1.1}, "secondary": {"Upper Back": 0.6}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Hip Thrust", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Quads": 0.3}, "equip": "Barbell", "gentle": False},
 
@@ -82,8 +81,8 @@ MASTER_LIBRARY = [
     {"name": "Dumbbell Glute Bridge", "impact": {"Hamstrings/Glutes": 0.9}, "secondary": {}, "equip": "Dumbbells", "gentle": True},
     
     # --- BODYWEIGHT (Density) ---
-    {"name": "Glute Ham Raise (GHR)", "impact": {"Hamstrings/Glutes": 1.3}, "secondary": {}, "equip": "Bodyweight", "gentle": False},
-    {"name": "Nordic Hamstring Curl", "impact": {"Hamstrings/Glutes": 1.4}, "secondary": {}, "equip": "Bodyweight", "gentle": False},
+    {"name": "Glute Ham Raise (GHR)", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {}, "equip": "Bodyweight", "gentle": False},
+    {"name": "Nordic Hamstring Curl", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {}, "equip": "Bodyweight", "gentle": False},
     {"name": "Bodyweight Hyperextension", "impact": {"Hamstrings/Glutes": 0.8}, "secondary": {"Upper Back": 0.3}, "equip": "Bodyweight", "gentle": True},
     {"name": "Single-Leg Glute Bridge", "impact": {"Hamstrings/Glutes": 0.9}, "secondary": {}, "equip": "Bodyweight", "gentle": True},
 

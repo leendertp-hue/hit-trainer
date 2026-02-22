@@ -20,6 +20,7 @@ def save_program_to_cloud(username, program_json, week, day, has_prog=1):
         "program_data": program_json,
         "current_week": week,
         "current_day": day,
+        "target_reps": rep_range,
         "has_program": has_prog
     }
     # Upsert handles both first-time save and updates
@@ -93,7 +94,7 @@ if not has_program:
     days = st.select_slider("Workout Days Per Week", options=[2, 3, 4, 5, 6, 7], value=3)
 
     if mode == "Auto-Generate Plan":
-        eq = st.multiselect("Available Equipment", ["Selectorized", "Plate-Loaded", "Cables", "Dumbbells", "Barbell", "Bodyweight", "Sled Machine", "Smith Machine"])
+        eq = st.multiselect("Available Equipment", ["Selectorized", "Plate-Loaded", "Cables", "Dumbbell", "Barbell", "Bodyweight", "Sled Machine", "Smith Machine"])
         if st.button("🚀 Generate My Plan"):
             from engine import HITEngine
             engine = HITEngine(days, eq, target_reps=rep_range, beginner=is_beginner)
@@ -192,10 +193,22 @@ else:
     week_key = f"Week {week_num}"
     exs = prog['weeks'][week_key][day_key]
 
-    # 6. Initialize Engine
+# 6. Initialize Engine with REAL data from the DB
     from engine import HITEngine
-    settings = st.session_state.get("user_settings", {"days": 3, "eq": ["Dumbbells", "Cables", "Selectorized"], "rep_range": "8-12"})
-    engine = HITEngine(settings['days'], settings['eq'], settings['rep_range'])
+    
+    # Get the rep range they actually chose during generation
+    user_rep_range = user_data.get('target_reps', '8-12') 
+    
+    # Detect equipment based on exercises already in the program
+    all_names = [ex['name'] for w in prog['weeks'].values() for d in w.values() if isinstance(d, list) for ex in d]
+    detected_eq = list(set([ex['equip'] for ex in MASTER_LIBRARY if ex['name'] in all_names]))
+    
+    # Initialize engine with the dynamic values
+    engine = HITEngine(
+        days=user_data.get('days_per_week', 3), 
+        equipment=detected_eq, 
+        target_reps=user_rep_range
+    )
 
     # --- 7. SIDEBAR --- Placeholder
 
