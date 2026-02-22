@@ -18,13 +18,14 @@ MASTER_LIBRARY = [
     {"name": "Barbell Back Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Front Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.3}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Walking Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
+     {"name": "Barbell Stepping Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Stationary Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Box Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
 
     # --- SMITH MACHINE ---
     {"name": "Smith Machine Squat", "impact": {"Quads": 1.1}, "secondary": {"Hamstrings/Glutes": 0.4}, "equip": "Smith Machine", "gentle": True},
     {"name": "Smith Machine Bulgarian Split Squat", "impact": {"Quads": 1.1}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Smith Machine", "gentle": True},
-    {"name": "Smith Machine Walking Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Smith Machine", "gentle": True},
+    {"name": "Smith Machine Stepping Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Smith Machine", "gentle": True},
     {"name": "Smith Machine Stationary Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Smith Machine", "gentle": True},
 
     # --- DUMBBELLS ---
@@ -32,6 +33,7 @@ MASTER_LIBRARY = [
     {"name": "Dumbbell Bulgarian Split Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.7}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Walking Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Stationary Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Dumbbells", "gentle": False},
+    {"name": "Dumbbell Stepping Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Step-Ups", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Dumbbells", "gentle": False},
 
 # --- BODYWEIGHT (Density & Discovery) ---

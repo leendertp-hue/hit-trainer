@@ -14,17 +14,20 @@ def get_user_data(username):
     res = supabase.table("users").select("*").eq("username", username).execute()
     return res.data[0] if res.data else None
 
-def save_program_to_cloud(username, program_json, week, day, has_prog=1):
+# --- HELPER FUNCTIONS ---
+def save_program_to_cloud(username, program_json, week, day, rep_range, eq_list, days_val, has_prog=1):
     data = {
         "username": username,
         "program_data": program_json,
         "current_week": week,
         "current_day": day,
         "target_reps": rep_range,
+        "equipment": eq_list,
+        "days_per_week": days_val,
         "has_program": has_prog
     }
-    # Upsert handles both first-time save and updates
     supabase.table("users").upsert(data, on_conflict="username").execute()
+    # Upsert handles both first-time save and updates
 
 # --- AUTHENTICATION STATE ---
 if 'logged_in' not in st.session_state:
@@ -93,23 +96,27 @@ if not has_program:
     is_beginner = st.checkbox("Beginner Mode", help="Prioritizes stable machines and joint-friendly movements.")
     days = st.select_slider("Workout Days Per Week", options=[2, 3, 4, 5, 6, 7], value=3)
 
+# --- BRANCH 1: PROGRAM GENERATION / BUILDING ---
+    # (Inside the "if not has_program:" block)
     if mode == "Auto-Generate Plan":
-        eq = st.multiselect("Available Equipment", ["Selectorized", "Plate-Loaded", "Cables", "Dumbbell", "Barbell", "Bodyweight", "Sled Machine", "Smith Machine"])
+        eq = st.multiselect("Available Equipment", ["Selectorized", "Plate-Loaded", "Cables", "Dumbbells", "Barbell", "Bodyweight", "Sled Machine", "Smith Machine"])
         if st.button("🚀 Generate My Plan"):
             from engine import HITEngine
             engine = HITEngine(days, eq, target_reps=rep_range, beginner=is_beginner)
             result = engine.generate_program()
-            new_program = result["program"]
             
-            # Save and Rerun
-            save_program_to_cloud(user, new_program, 1, 1, has_prog=1)
+            if "error" in result:
+                st.error(result["details"])
+            else:
+                new_program = result["program"]
+                save_program_to_cloud(user, new_program, 1, 1, rep_range, eq, days, has_prog=1)
+                st.rerun()
 
-    else:
+    elif mode == "Build Manual Plan":
         st.subheader("🛠️ Build Your Routine")
         custom_plan = {}
         all_library_names = [ex['name'] for ex in MASTER_LIBRARY]
 
-        # Create input slots for each day
         for d in range(1, days + 1):
             with st.expander(f"📅 Day {d} Exercises", expanded=True):
                 selected_for_day = st.multiselect(
@@ -123,9 +130,7 @@ if not has_program:
             if any(len(v) == 0 for v in custom_plan.values()):
                 st.error("Please add at least one exercise to every day!")
             else:
-                # Create a lookup map from the library to check equipment
                 lib_map = {ex['name']: ex for ex in MASTER_LIBRARY}
-                
                 structured_weeks = {"weeks": {}}
                 for w in range(1, 7):
                     wk_key = f"Week {w}"
@@ -137,14 +142,10 @@ if not has_program:
                             is_bw = ex_info.get('equip') == "Bodyweight"
                             is_weighted_bw = "Weighted" in name
                             
-                            # If it's pure Bodyweight, we set target to 0 (to be filled by Discovery)
-                            # Otherwise, use the standard middle-of-range rep target
                             if is_bw and not is_weighted_bw:
-                                t_reps = 0 
-                                p_type = "density"
+                                t_reps, p_type = 0, "density"
                             else:
-                                t_reps = (low + high) // 2
-                                p_type = "standard"
+                                t_reps, p_type = (low + high) // 2, "standard"
 
                             day_exercises.append({
                                 "name": name,
@@ -152,26 +153,54 @@ if not has_program:
                                 "target_reps": t_reps,
                                 "target_weight": 0.0,
                                 "e1rm": 0.0,
-                                "discovery_reps": 0 # The "Seed" for BW moves
+                                "discovery_reps": 0
                             })
-                        
                         structured_weeks["weeks"][wk_key][d_key] = day_exercises
                 
-                save_program_to_cloud(user, structured_weeks, 1, 1, has_prog=1)
-        
+                # 🟢 FIXED: Added the missing arguments to match your new helper function
+                # We use ['Manual'] so the database knows this wasn't an auto-gen list
+                save_program_to_cloud(
+                    user, 
+                    structured_weeks, 
+                    1, 1, 
+                    rep_range, 
+                    ["Manual"], 
+                    days, 
+                    has_prog=1
+                )
+                st.rerun()
 
 
 # --- BRANCH 2: ACTIVE TRAINING ---
 else:
-    # 1. INITIALIZE LIST IMMEDIATELY
-    # This prevents NameError because it now exists even if the loop is empty
     session_results = []
 
-    # 2. LAZY LOAD JSON
     if 'current_program' not in st.session_state:
         st.session_state.current_program = user_data['program_data']
     
     prog = st.session_state.current_program
+    week_num = user_data['current_week']
+    day_num = user_data['current_day']
+
+    # ... (Keep your Program Completion / Reset logic here) ...
+
+    day_key = f"Day {day_num}"
+    week_key = f"Week {week_num}"
+    exs = prog['weeks'][week_key][day_key]
+
+    # 🟢 NEW ENGINE INIT: This is the part you're replacing
+    from engine import HITEngine
+    
+    user_rep_range = user_data.get('target_reps', '8-12')
+    user_equipment = user_data.get('equipment', ["Bodyweight"])
+    user_days = user_data.get('days_per_week', 3)
+    
+    engine = HITEngine(
+        days=user_days, 
+        equipment=user_equipment, 
+        target_reps=user_rep_range,
+        beginner=user_data.get('is_beginner', False)
+    )
 
     # 3. THE SMART GPS
     week_num = user_data['current_week']
@@ -188,27 +217,6 @@ else:
             st.rerun()
         st.stop()
 
-    # 5. DEFINE CURRENT SESSION DATA
-    day_key = f"Day {day_num}"
-    week_key = f"Week {week_num}"
-    exs = prog['weeks'][week_key][day_key]
-
-# 6. Initialize Engine with REAL data from the DB
-    from engine import HITEngine
-    
-    # Get the rep range they actually chose during generation
-    user_rep_range = user_data.get('target_reps', '8-12') 
-    
-    # Detect equipment based on exercises already in the program
-    all_names = [ex['name'] for w in prog['weeks'].values() for d in w.values() if isinstance(d, list) for ex in d]
-    detected_eq = list(set([ex['equip'] for ex in MASTER_LIBRARY if ex['name'] in all_names]))
-    
-    # Initialize engine with the dynamic values
-    engine = HITEngine(
-        days=user_data.get('days_per_week', 3), 
-        equipment=detected_eq, 
-        target_reps=user_rep_range
-    )
 
     # --- 7. SIDEBAR --- Placeholder
 
@@ -324,7 +332,16 @@ else:
                             prog["weeks"][f"Week {w}"][day_key][i] = new_move_data
                         
                         # 4. Save to Cloud
-                        save_program_to_cloud(user, prog, week_num, day_num)
+                        # ✅ NEW
+                        save_program_to_cloud(
+                            user, 
+                            prog, 
+                            week_num, 
+                            day_num, 
+                            user_data['target_reps'], 
+                            user_data['equipment'], 
+                            user_data['days_per_week']
+                        )
                         
                         # 5. FORCE REFRESH: Delete the cached program and the input values
                         if 'current_program' in st.session_state:
@@ -504,7 +521,16 @@ else:
             new_day, new_week = 1, week_num + 1
 
         # D. Save to Supabase
-        save_program_to_cloud(user, prog, new_week, new_day)
+        # ✅ NEW
+        save_program_to_cloud(
+            user, 
+            prog, 
+            new_week, 
+            new_day, 
+            user_data['target_reps'], 
+            user_data['equipment'], 
+            user_data['days_per_week']
+        )
         
         # E. FORCE REFRESH: Kill session state so it re-pulls fresh data from Cloud
         if 'current_program' in st.session_state:

@@ -27,7 +27,13 @@ class HITEngine:
 
     def generate_program(self):
         """Generates a 6-week block with unique memory objects per week."""
-        pool = [ex for ex in MASTER_LIBRARY if ex['equip'] in self.equipment]
+        # Strict Equipment Filtering (Prevents Arnold Press ghosting)
+        user_gear = [g.lower().strip().rstrip('s') for g in self.equipment]
+        pool = []
+        for ex in MASTER_LIBRARY:
+            lib_gear = ex['equip'].lower().strip().rstrip('s')
+            if lib_gear in user_gear:
+                pool.append(ex)
         
         # --- ERROR CHECK ---
         total_possible_units = {m: 0.0 for m in self.targets.keys()}
