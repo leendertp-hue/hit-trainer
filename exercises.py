@@ -67,7 +67,7 @@ MASTER_LIBRARY = [
     {"name": "45-Degree Hyperextension (Weighted)", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {"Upper Back": 0.4}, "equip": "Plate-Loaded", "gentle": True},
 
     # --- BARBELL (The Heavy Hinges) ---
-    {"name": "Barbell Romanian Deadlift (RDL)", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.5, "Forearms": 0.4}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Romanian Deadlift (RDL)", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.5}, "equip": "Barbell", "gentle": False},
     {"name": "Stiff-Leg Deadlift", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.5}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Good Mornings", "impact": {"Hamstrings/Glutes": 1.1}, "secondary": {"Upper Back": 0.6}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Hip Thrust", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Quads": 0.3}, "equip": "Barbell", "gentle": False},
@@ -78,8 +78,8 @@ MASTER_LIBRARY = [
     {"name": "Smith Machine Hip Thrust", "impact": {"Hamstrings/Glutes": 1.1}, "secondary": {"Quads": 0.2}, "equip": "Smith Machine", "gentle": True},
 
     # --- DUMBBELLS ---
-    {"name": "Dumbbell RDL", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {"Forearms": 0.5}, "equip": "Dumbbells", "gentle": False},
-    {"name": "Single-Leg Dumbbell RDL", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {"Abs": 0.4}, "equip": "Dumbbells", "gentle": False},
+    {"name": "Dumbbell RDL", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {}, "equip": "Dumbbells", "gentle": False},
+    {"name": "Single-Leg Dumbbell RDL", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Glute Bridge", "impact": {"Hamstrings/Glutes": 0.9}, "secondary": {}, "equip": "Dumbbells", "gentle": True},
     
     # --- BODYWEIGHT (Density) ---
@@ -194,8 +194,8 @@ MASTER_LIBRARY = [
     {"name": "Overhead Triceps Extension (Machine)", "impact": {"Triceps": 1.1}, "secondary": {}, "equip": "Selectorized", "gentle": True},
 
     # --- BARBELL ---
-    {"name": "Barbell Skull Crushers (Flat)", "impact": {"Triceps": 1.1}, "secondary": {"Forearms": 0.3}, "equip": "Barbell", "gentle": False},
-    {"name": "Barbell Skull Crushers (Incline)", "impact": {"Triceps": 1.1}, "secondary": {"Forearms": 0.3}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Skull Crushers (Flat)", "impact": {"Triceps": 1.1}, "secondary": {}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Skull Crushers (Incline)", "impact": {"Triceps": 1.1}, "secondary": {}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell JM Press", "impact": {"Triceps": 1.2}, "secondary": {"Pectorals": 0.3, "Front Delts": 0.3}, "equip": "Barbell", "gentle": False},
 
     # --- SMITH MACHINE ---
@@ -209,14 +209,14 @@ MASTER_LIBRARY = [
     {"name": "Dumbbell Kickbacks", "impact": {"Triceps": 0.8}, "secondary": {}, "equip": "Dumbbells", "gentle": True},
 
     # --- CABLES ---
-    {"name": "Cable Rope Pushdown", "impact": {"Triceps": 1.0}, "secondary": {"Forearms": 0.3}, "equip": "Cables", "gentle": True},
+    {"name": "Cable Rope Pushdown", "impact": {"Triceps": 1.0}, "secondary": {}, "equip": "Cables", "gentle": True},
     {"name": "Cable Overhead Extension (Rope)", "impact": {"Triceps": 1.2}, "secondary": {}, "equip": "Cables", "gentle": True},
     {"name": "Cable Straight Bar Pushdown", "impact": {"Triceps": 1.0}, "secondary": {}, "equip": "Cables", "gentle": True},
     {"name": "Single Arm Cable Extension (Lateral Head)", "impact": {"Triceps": 1.0}, "secondary": {}, "equip": "Cables", "gentle": True},
 
     # --- BODYWEIGHT ---
     {"name": "Bench Dips", "impact": {"Triceps": 1.0}, "secondary": {"Front Delts": 0.4}, "equip": "Bodyweight", "gentle": True},
-    {"name": "Bodyweight Skull Crushers (on bar)", "impact": {"Triceps": 1.1}, "secondary": {"Abs": 0.3}, "equip": "Bodyweight", "gentle": False},
+    {"name": "Bodyweight Skull Crushers (on bar)", "impact": {"Triceps": 1.1}, "secondary": {}, "equip": "Bodyweight", "gentle": False},
 
     # ==========================================
     # 등 (UPPER BACK & LATS)
@@ -239,7 +239,7 @@ MASTER_LIBRARY = [
     # --- BARBELL & LANDMINE ---
     {"name": "Barbell Row (Overhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.5}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Row (Underhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.8, "Rear Delts": 0.4}, "equip": "Barbell", "gentle": False},
-    {"name": "Meadows Row (Landmine)", "impact": {"Upper Back": 1.1}, "secondary": {"Rear Delts": 0.6, "Forearms": 0.5}, "equip": "Barbell", "gentle": False},
+    {"name": "Meadows Row (Landmine)", "impact": {"Upper Back": 1.1}, "secondary": {"Rear Delts": 0.6}, "equip": "Barbell", "gentle": False},
     {"name": "Pendlay Row", "impact": {"Upper Back": 1.2}, "secondary": {"Hamstrings/Glutes": 0.4}, "equip": "Barbell", "gentle": False},
     {"name": "T-Bar Row (Landmine/Old School)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5}, "equip": "Barbell", "gentle": False},
 
@@ -248,12 +248,12 @@ MASTER_LIBRARY = [
     {"name": "Smith Machine Row (Underhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.8, "Rear Delts": 0.4}, "equip": "Smith Machine", "gentle": True},
 
     # --- DUMBBELLS ---
-    {"name": "One-Arm Dumbbell Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5, "Forearms": 0.5}, "equip": "Dumbbells", "gentle": False},
+    {"name": "One-Arm Dumbbell Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5}, "equip": "Dumbbells", "gentle": False},
     {"name": "Incline Dumbbell Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.5}, "equip": "Dumbbells", "gentle": True},
     {"name": "Dumbbell Pullover (Lat focus)", "impact": {"Upper Back": 1.0}, "secondary": {"Triceps": 0.3, "Pectorals": 0.2}, "equip": "Dumbbells", "gentle": True},
 
     # --- CABLES ---
-    {"name": "Single Arm Cable Row (Bottom Pulley)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.5, "Forearms": 0.3}, "equip": "Cables", "gentle": True},
+    {"name": "Single Arm Cable Row (Bottom Pulley)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.5}, "equip": "Cables", "gentle": True},
     {"name": "Straight Arm Cable Pulldown (Top Pulley)", "impact": {"Upper Back": 1.0}, "secondary": {"Triceps": 0.4}, "equip": "Cables", "gentle": True},
     {"name": "Cable Pullover (Lying on bench)", "impact": {"Upper Back": 1.0}, "secondary": {"Triceps": 0.3}, "equip": "Cables", "gentle": True},
 
@@ -264,7 +264,7 @@ MASTER_LIBRARY = [
     {"name": "Inverted Row (Aussie Pull-ups)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.5}, "equip": "Bodyweight", "gentle": True},
 
     # ==========================================
-    # 이두근 (BICEPS & FOREARMS)
+    # 이두근 (BICEPS
     # ==========================================
 
     # --- SELECTORIZED ---
@@ -272,21 +272,21 @@ MASTER_LIBRARY = [
     {"name": "Machine Preacher Curl", "impact": {"Biceps": 1.1}, "secondary": {}, "equip": "Selectorized", "gentle": True},
 
     # --- BARBELL ---
-    {"name": "Barbell Bicep Curl (Straight Bar)", "impact": {"Biceps": 1.0}, "secondary": {"Forearms": 0.4}, "equip": "Barbell", "gentle": False},
-    {"name": "EZ-Bar Bicep Curl", "impact": {"Biceps": 1.0}, "secondary": {"Forearms": 0.3}, "equip": "Barbell", "gentle": True},
-    {"name": "Barbell Reverse Curl", "impact": {"Biceps": 0.7}, "secondary": {"Forearms": 1.0}, "equip": "Barbell", "gentle": False},
-    {"name": "Barbell Preacher Curl", "impact": {"Biceps": 1.1}, "secondary": {"Forearms": 0.3}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Bicep Curl (Straight Bar)", "impact": {"Biceps": 1.0}, "secondary": {}, "equip": "Barbell", "gentle": False},
+    {"name": "EZ-Bar Bicep Curl", "impact": {"Biceps": 1.0}, "secondary": {}, "equip": "Barbell", "gentle": True},
+    {"name": "Barbell Reverse Curl", "impact": {"Biceps": 0.7}, "secondary": {}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Preacher Curl", "impact": {"Biceps": 1.1}, "secondary": {}, "equip": "Barbell", "gentle": False},
 
     # --- SMITH MACHINE ---
     {"name": "Smith Machine Drag Curl", "impact": {"Biceps": 1.1}, "secondary": {"Rear Delts": 0.3}, "equip": "Smith Machine", "gentle": True},
 
     # --- DUMBBELLS ---
-    {"name": "Dumbbell Alternating Curl", "impact": {"Biceps": 1.0}, "secondary": {"Forearms": 0.3}, "equip": "Dumbbells", "gentle": False},
-    {"name": "Dumbbell Hammer Curl", "impact": {"Biceps": 0.8}, "secondary": {"Forearms": 1.0}, "equip": "Dumbbells", "gentle": False},
+    {"name": "Dumbbell Alternating Curl", "impact": {"Biceps": 1.0}, "secondary": {}, "equip": "Dumbbells", "gentle": False},
+    {"name": "Dumbbell Hammer Curl", "impact": {"Biceps": 0.8}, "secondary": {}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Incline Curl", "impact": {"Biceps": 1.2}, "secondary": {}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Concentration Curl", "impact": {"Biceps": 1.0}, "secondary": {}, "equip": "Dumbbells", "gentle": True},
 
     # --- CABLES ---
     {"name": "Cable Bicep Curl (Straight Bar)", "impact": {"Biceps": 1.0}, "secondary": {}, "equip": "Cables", "gentle": True},
-    {"name": "Cable Rope Hammer Curl", "impact": {"Biceps": 0.8}, "secondary": {"Forearms": 1.0}, "equip": "Cables", "gentle": True},
+    {"name": "Cable Rope Hammer Curl", "impact": {"Biceps": 0.8}, "secondary": {}, "equip": "Cables", "gentle": True},
     {"name": "Cable Behind-the-Back Curl", "impact": {"Biceps": 1.2}, "secondary": {}, "equip": "Cables", "gentle": True}]
