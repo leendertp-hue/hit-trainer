@@ -32,12 +32,12 @@ def save_program_to_cloud(username, program_json, week, day, rep_range, eq_list,
 
 # --- AUTHENTICATION STATE ---
 cookie_manager = stx.CookieManager()
-cookie_manager.get_all()
+cookie_manager.get_all() # 👈 Important: Ping the component
 
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
 
-# 🍪 COOKIE CHECK: If not logged in, try to find a cookie
+# 🍪 COOKIE CHECK
 if not st.session_state['logged_in']:
     saved_user = cookie_manager.get('hit_username')
     if saved_user:
@@ -45,6 +45,7 @@ if not st.session_state['logged_in']:
         st.session_state['username'] = saved_user
         st.rerun()
 
+# --- LOGIN / SIGNUP UI ---
 if not st.session_state['logged_in']:
     st.title("🛡️ HIT Adaptive Trainer")
     tab1, tab2 = st.tabs(["Login", "Sign Up"])
@@ -52,19 +53,38 @@ if not st.session_state['logged_in']:
     with tab1:
         u_log = st.text_input("Username", key="login_u")
         p_log = st.text_input("Password", type='password', key="login_p")
-        if st.button("Login"):
+        if st.button("Login", use_container_width=True):
             pwd_hash = hashlib.sha256(p_log.encode()).hexdigest()
             user_data = get_user_data(u_log)
             if user_data and user_data['password'] == pwd_hash:
                 st.session_state['logged_in'] = True
                 st.session_state['username'] = u_log
-                # 🍪 Set Cookie for 30 days
                 cookie_manager.set('hit_username', u_log, expires_at=datetime.datetime.now() + datetime.timedelta(days=30))
                 st.rerun()
             else:
                 st.error("Invalid credentials")
-    # ... (Keep Tab 2 Sign Up logic exactly as it was) ...
-    st.stop()
+
+    with tab2:
+        u_sign = st.text_input("New Username", key="sign_u")
+        p_sign = st.text_input("New Password", type='password', key="sign_p")
+        if st.button("Create Account", use_container_width=True):
+            if not u_sign or not p_sign:
+                st.warning("Please fill in both fields.")
+            else:
+                pwd_hash = hashlib.sha256(p_sign.encode()).hexdigest()
+                if get_user_data(u_sign):
+                    st.error("Username already exists.")
+                else:
+                    supabase.table("users").insert({
+                        "username": u_sign, 
+                        "password": pwd_hash, 
+                        "has_program": 0, 
+                        "current_week": 1, 
+                        "current_day": 1
+                    }).execute()
+                    st.success("Account created! You can now login on the first tab.")
+
+    st.stop() # 👈 This must be OUTSIDE the tabs but INSIDE the 'if not logged_in' block
 
 # --- LOGGED IN CONTENT ---
 user = st.session_state['username']
