@@ -47,7 +47,7 @@ if not st.session_state['logged_in']:
 
 # --- LOGIN / SIGNUP UI ---
 if not st.session_state['logged_in']:
-    st.title("🛡️ HIT Adaptive Trainer")
+    st.title("🛡️ HIT Personal Trainer")
     tab1, tab2 = st.tabs(["Login", "Sign Up"])
 
     with tab1:
@@ -313,6 +313,32 @@ else:
                 st.caption("ℹ️ Complete a session to see your first data point.")
         else:
             st.info("Select an exercise to see your progression.")
+
+           
+        st.write(f"👤 Logged in as: **{user}**")
+        if st.button("Logout"):
+            # 1. Safely delete the cookie only if it exists
+            try:
+                # Get all cookies first to refresh the manager's state
+                all_cookies = cookie_manager.get_all()
+                if 'hit_username' in all_cookies:
+                    cookie_manager.delete('hit_username')
+            except Exception:
+                # If the component blips, we just move on to the session clear
+                pass
+            
+            # 2. Clear session state completely
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+                
+            # 3. Explicitly reset the login flag
+            st.session_state['logged_in'] = False
+            
+            # 4. Success message and rerun
+            st.info("Logging out...")
+            time.sleep(1)
+            st.rerun()
+    
 
     # 8. UI HEADER
     has_baseline = any(ex.get('e1rm', 0) > 0 for ex in exs)
