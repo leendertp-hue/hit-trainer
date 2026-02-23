@@ -1,7 +1,8 @@
 import streamlit as st
-import json, time, hashlib
+import json, time, hashlib, datetime
 from supabase import create_client, Client
 from exercises import MASTER_LIBRARY
+import extra_streamlit_components as stx  
 
 # --- SUPABASE SETUP ---
 # These will be set in Streamlit Cloud Settings > Secrets
@@ -30,8 +31,19 @@ def save_program_to_cloud(username, program_json, week, day, rep_range, eq_list,
     # Upsert handles both first-time save and updates
 
 # --- AUTHENTICATION STATE ---
+cookie_manager = stx.CookieManager()
+cookie_manager.get_all()
+
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
+
+# 🍪 COOKIE CHECK: If not logged in, try to find a cookie
+if not st.session_state['logged_in']:
+    saved_user = cookie_manager.get('hit_username')
+    if saved_user:
+        st.session_state['logged_in'] = True
+        st.session_state['username'] = saved_user
+        st.rerun()
 
 if not st.session_state['logged_in']:
     st.title("🛡️ HIT Adaptive Trainer")
@@ -46,26 +58,12 @@ if not st.session_state['logged_in']:
             if user_data and user_data['password'] == pwd_hash:
                 st.session_state['logged_in'] = True
                 st.session_state['username'] = u_log
+                # 🍪 Set Cookie for 30 days
+                cookie_manager.set('hit_username', u_log, expires_at=datetime.datetime.now() + datetime.timedelta(days=30))
                 st.rerun()
             else:
                 st.error("Invalid credentials")
-
-    with tab2:
-        u_sign = st.text_input("New Username", key="sign_u")
-        p_sign = st.text_input("New Password", type='password', key="sign_p")
-        if st.button("Create Account"):
-            pwd_hash = hashlib.sha256(p_sign.encode()).hexdigest()
-            if get_user_data(u_sign):
-                st.error("Username already exists.")
-            else:
-                supabase.table("users").insert({
-                    "username": u_sign, 
-                    "password": pwd_hash, 
-                    "has_program": 0, 
-                    "current_week": 1, 
-                    "current_day": 1
-                }).execute()
-                st.success("Account created! Please login.")
+    # ... (Keep Tab 2 Sign Up logic exactly as it was) ...
     st.stop()
 
 # --- LOGGED IN CONTENT ---
@@ -301,6 +299,26 @@ else:
     st.title("🧪 Discovery Mode" if not has_baseline else f"🚀 Training Mode: W{week_num}")
     st.subheader(f"Session: {day_key}")
 
+
+# ⚡ LIVE SYNC HELPER
+    def sync_draft_to_cloud():
+        # Update the local program object with whatever is in the session_state inputs
+        for idx, exercise in enumerate(exs):
+            w_key = f"w_in_w{week_num}_d{day_num}_{idx}"
+            r_key = f"r_in_w{week_num}_d{day_num}_{idx}"
+            
+            if w_key in st.session_state:
+                exercise['draft_w'] = st.session_state[w_key]
+            if r_key in st.session_state:
+                exercise['draft_r'] = st.session_state[r_key]
+        
+        # Save updated JSON to Supabase
+        save_program_to_cloud(
+            user, prog, week_num, day_num, 
+            user_data['target_reps'], user_data['equipment'], user_data['days_per_week']
+        )
+
+
 # --- START OF THE EXERCISE LOOP ---
     for i, ex in enumerate(exs):
         unique_key_suffix = f"w{week_num}_d{day_num}_{i}" # Defined early to prevent NameErrors
@@ -428,14 +446,16 @@ else:
                     st.caption(f"⏱️ Recovery: {default_s//60}m {default_s%60}s rest is essential for peak intensity.")
 
 
-            # --- D. Data Entry ---
+# --- D. Data Entry ---
             if is_density:
                 w_act = 0.0
                 r_act = st.number_input(
                     "Total Reps Achieved", 
                     key=f"r_in_{unique_key_suffix}", 
                     step=1, 
-                    value=0
+                    # 🟢 Loads draft if it exists
+                    value=int(ex.get('draft_r', 0)),
+                    on_change=sync_draft_to_cloud # ⚡ Syncs to cloud on change
                 )
             else:
                 col_w, col_r = st.columns(2)
@@ -443,13 +463,17 @@ else:
                     w_act = st.number_input(
                         "Weight (kg)", 
                         key=f"w_in_{unique_key_suffix}", 
-                        value=float(ex.get('target_weight', 0))
+                        # 🟢 Loads draft or target
+                        value=float(ex.get('draft_w', ex.get('target_weight', 0))),
+                        on_change=sync_draft_to_cloud # ⚡ Syncs to cloud on change
                     )
                 with col_r: 
                     r_act = st.number_input(
                         "Reps", 
                         key=f"r_in_{unique_key_suffix}", 
-                        value=int(ex.get('target_reps', 10))
+                        # 🟢 Loads draft or target
+                        value=int(ex.get('draft_r', ex.get('target_reps', 10))),
+                        on_change=sync_draft_to_cloud # ⚡ Syncs to cloud on change
                     )
 
             # COLLECT DATA
