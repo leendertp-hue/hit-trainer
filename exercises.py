@@ -5,7 +5,7 @@
 MASTER_LIBRARY = [
     # --- SELECTORIZED ---
     {"name": "Leg Extension", "impact": {"Quads": 1.0}, "secondary": {}, "equip": "Selectorized", "gentle": True},
-    {"name": "Seated Leg Press (Horizontal)", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.4}, "equip": "Selectorized", "gentle": True},
+    {"name": "Seated Leg Press (Horizontal)", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.7}, "equip": "Selectorized", "gentle": True},
 
     # --- PLATE-LOADED / SLED ---
     {"name": "Leg Press (45-Degree Sled)", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.4, "Calves": 0.4}, "equip": "Plate-Loaded", "gentle": True},
@@ -18,7 +18,7 @@ MASTER_LIBRARY = [
     {"name": "Barbell Back Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Front Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.3}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Walking Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
-     {"name": "Barbell Stepping Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Stepping Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Stationary Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Box Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Barbell", "gentle": False},
 
@@ -62,19 +62,19 @@ MASTER_LIBRARY = [
     {"name": "Glute Kickback Machine", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {}, "equip": "Selectorized", "gentle": True},
 
     # --- PLATE-LOADED / SLED ---
-    {"name": "Machine Hip Thrust", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Quads": 0.3}, "equip": "Plate-Loaded", "gentle": True},
+    {"name": "Machine Hip Thrust", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Quads": 0.2}, "equip": "Plate-Loaded", "gentle": True},
     {"name": "Plate-Loaded Glute Driver", "impact": {"Hamstrings/Glutes": 1.1}, "secondary": {"Quads": 0.2}, "equip": "Plate-Loaded", "gentle": True},
     {"name": "45-Degree Hyperextension (Weighted)", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {"Upper Back": 0.4}, "equip": "Plate-Loaded", "gentle": True},
 
     # --- BARBELL (The Heavy Hinges) ---
-    {"name": "Barbell Romanian Deadlift (RDL)", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.5}, "equip": "Barbell", "gentle": False},
-    {"name": "Stiff-Leg Deadlift", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.5}, "equip": "Barbell", "gentle": False},
-    {"name": "Barbell Good Mornings", "impact": {"Hamstrings/Glutes": 1.1}, "secondary": {"Upper Back": 0.6}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Romanian Deadlift (RDL)", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.3}, "equip": "Barbell", "gentle": False},
+    {"name": "Stiff-Leg Deadlift", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Upper Back": 0.3}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Good Mornings", "impact": {"Hamstrings/Glutes": 1.1}, "secondary": {"Upper Back": 0.3}, "equip": "Barbell", "gentle": False},
     {"name": "Barbell Hip Thrust", "impact": {"Hamstrings/Glutes": 1.2}, "secondary": {"Quads": 0.3}, "equip": "Barbell", "gentle": False},
 
     # --- SMITH MACHINE ---
     {"name": "Smith Machine RDL", "impact": {"Hamstrings/Glutes": 1.1}, "secondary": {"Upper Back": 0.3}, "equip": "Smith Machine", "gentle": True},
-    {"name": "Smith Machine Good Mornings", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {"Upper Back": 0.5}, "equip": "Smith Machine", "gentle": True},
+    {"name": "Smith Machine Good Mornings", "impact": {"Hamstrings/Glutes": 1.0}, "secondary": {"Upper Back": 0.3}, "equip": "Smith Machine", "gentle": True},
     {"name": "Smith Machine Hip Thrust", "impact": {"Hamstrings/Glutes": 1.1}, "secondary": {"Quads": 0.2}, "equip": "Smith Machine", "gentle": True},
 
     # --- DUMBBELLS ---
@@ -94,12 +94,12 @@ MASTER_LIBRARY = [
 
     # --- THE ALL-ROUNDERS (High Versatility) ---
     {"name": "Barbell Upright Row", "impact": {"Side Delts": 1.0, "Front Delts": 1.0}, "secondary": {"Rear Delts": 0.4, "Biceps": 0.4}, "equip": "Barbell", "gentle": False},
-    {"name": "Dumbbell Arnold Press", "impact": {"Front Delts": 1.0, "Side Delts": 1.0}, "secondary": {"Triceps": 0.5}, "equip": "Dumbbells", "gentle": False},
-    {"name": "Smith Machine Behind-the-Neck Press", "impact": {"Side Delts": 1.0, "Front Delts": 1.0}, "secondary": {"Triceps": 0.5}, "equip": "Smith Machine", "gentle": False},
-    {"name": "Cable Face Pulls", "impact": {"Rear Delts": 1.0, "Side Delts": 0.8}, "secondary": {"Upper Back": 0.6}, "equip": "Cables", "gentle": True},
+    {"name": "Dumbbell Arnold Press", "impact": {"Front Delts": 1.0}, "secondary": {"Triceps": 0.5, "Side Delts": 0.8}, "equip": "Dumbbells", "gentle": False},
+    {"name": "Smith Machine Behind-the-Neck Press", "impact": {"Front Delts": 1.0}, "secondary": {"Triceps": 0.5, "Side Delts": 0.7}, "equip": "Smith Machine", "gentle": False},
+    {"name": "Cable Face Pulls", "impact": {"Rear Delts": 1.0, "Side Delts": 0.8}, "secondary": {"Upper Back": 0.2}, "equip": "Cables", "gentle": True},
 
     # --- SELECTORIZED ---
-    {"name": "Machine Shoulder Press", "impact": {"Front Delts": 1.0}, "secondary": {"Side Delts": 0.4, "Triceps": 0.5}, "equip": "Selectorized", "gentle": True},
+    {"name": "Machine Shoulder Press", "impact": {"Front Delts": 1.0}, "secondary": {"Side Delts": 0.4, "Triceps": 0.3}, "equip": "Selectorized", "gentle": True},
     {"name": "Machine Lateral Raise", "impact": {"Side Delts": 1.0}, "secondary": {}, "equip": "Selectorized", "gentle": True},
     {"name": "Rear Delt Fly (Pec Deck Machine)", "impact": {"Rear Delts": 1.0}, "secondary": {"Upper Back": 0.4}, "equip": "Selectorized", "gentle": True},
 
@@ -108,9 +108,9 @@ MASTER_LIBRARY = [
     {"name": "Plate-Loaded Lateral Raise", "impact": {"Side Delts": 1.0}, "secondary": {}, "equip": "Plate-Loaded", "gentle": True},
 
     # --- BARBELL ---
-    {"name": "Barbell Overhead Press (Standing)", "impact": {"Front Delts": 1.0}, "secondary": {"Side Delts": 0.5, "Triceps": 0.5}, "equip": "Barbell", "gentle": False},
-    {"name": "Barbell Overhead Press (Seated)", "impact": {"Front Delts": 1.0}, "secondary": {"Side Delts": 0.5, "Triceps": 0.5}, "equip": "Barbell", "gentle": False},
-    {"name": "Barbell Rear Delt Row", "impact": {"Rear Delts": 1.1}, "secondary": {"Upper Back": 0.6}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Overhead Press (Standing)", "impact": {"Front Delts": 1.0}, "secondary": {"Side Delts": 0.3, "Triceps": 0.3}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Overhead Press (Seated)", "impact": {"Front Delts": 1.0}, "secondary": {"Side Delts": 0.3, "Triceps": 0.3}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Rear Delt Row", "impact": {"Rear Delts": 1.1}, "secondary": {"Upper Back": 0.4}, "equip": "Barbell", "gentle": False},
 
     # --- SMITH MACHINE ---
     {"name": "Smith Machine Shoulder Press", "impact": {"Front Delts": 1.1}, "secondary": {"Side Delts": 0.4, "Triceps": 0.4}, "equip": "Smith Machine", "gentle": True},
@@ -134,18 +134,17 @@ MASTER_LIBRARY = [
     # ==========================================
 
     # --- SELECTORIZED ---
-    {"name": "Machine Chest Press (Seated)", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.5, "Triceps": 0.5}, "equip": "Selectorized", "gentle": True},
-    {"name": "Machine Chest Press (Flat)", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.5, "Triceps": 0.5}, "equip": "Selectorized", "gentle": True},
-    {"name": "Machine Incline Press", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.5, "Triceps": 0.5}, "equip": "Selectorized", "gentle": True},
-    {"name": "Machine Chest Fly", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.3}, "equip": "Selectorized", "gentle": True},
-    {"name": "Pec Deck (Old School)", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.3}, "equip": "Selectorized", "gentle": True},
-    {"name": "Triceps Dip Machine (Seated)", "impact": {"Pectorals": 1.0, "Triceps": 1.0}, "secondary": {"Front Delts": 0.3}, "equip": "Selectorized", "gentle": True},
+    {"name": "Machine Chest Press (Seated)", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.4, "Triceps": 0.5}, "equip": "Selectorized", "gentle": True},
+    {"name": "Machine Chest Press (Flat)", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.4, "Triceps": 0.5}, "equip": "Selectorized", "gentle": True},
+    {"name": "Machine Incline Press", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.4, "Triceps": 0.5}, "equip": "Selectorized", "gentle": True},
+    {"name": "Machine Chest Fly", "impact": {"Pectorals": 1.0}, "secondary": {}, "equip": "Selectorized", "gentle": True},
+    {"name": "Pec Deck (Old School)", "impact": {"Pectorals": 1.0}, "secondary": {}, "equip": "Selectorized", "gentle": True},
+    {"name": "Triceps Dip Machine (Seated)", "impact": {"Triceps": 1.0}, "secondary": {"Front Delts": 0.3, "Pectorals": 0.5}, "equip": "Selectorized", "gentle": True},
 
     # --- PLATE-LOADED ---
-    {"name": "Plate-Loaded Seated Chest Press", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.5, "Triceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
-    {"name": "Plate-Loaded Flat Bench Press", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.5, "Triceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
-    {"name": "Plate-Loaded Incline Press", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.5, "Triceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
-    {"name": "Plate-Loaded Weighted Dip", "impact": {"Pectorals": 1.0, "Triceps": 1.0}, "secondary": {"Front Delts": 0.5}, "equip": "Plate-Loaded", "gentle": True},
+    {"name": "Plate-Loaded Seated Chest Press", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.4, "Triceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
+    {"name": "Plate-Loaded Flat Bench Press", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.4, "Triceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
+    {"name": "Plate-Loaded Incline Press", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.6, "Triceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
 
     # --- BARBELL ---
     {"name": "Barbell Bench Press (Standard Grip)", "impact": {"Pectorals": 1.0}, "secondary": {"Front Delts": 0.5, "Triceps": 0.5}, "equip": "Barbell", "gentle": False},
@@ -224,43 +223,43 @@ MASTER_LIBRARY = [
 
     # --- SELECTORIZED ---
     {"name": "Seated Machine Row (Overhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.4}, "equip": "Selectorized", "gentle": True},
-    {"name": "Seated Machine Row (Neutral/Close Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.6, "Rear Delts": 0.4}, "equip": "Selectorized", "gentle": True},
-    {"name": "Seated Machine Row (Underhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.8, "Rear Delts": 0.3}, "equip": "Selectorized", "gentle": True},
+    {"name": "Seated Machine Row (Neutral/Close Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.4, "Rear Delts": 0.4}, "equip": "Selectorized", "gentle": True},
+    {"name": "Seated Machine Row (Underhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.6, "Rear Delts": 0.3}, "equip": "Selectorized", "gentle": True},
     {"name": "Lat Pulldown (Wide Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5}, "equip": "Selectorized", "gentle": True},
-    {"name": "Lat Pulldown (Neutral/V-Bar)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.7, "Rear Delts": 0.4}, "equip": "Selectorized", "gentle": True},
-    {"name": "Lat Pulldown (Underhand)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.8}, "equip": "Selectorized", "gentle": True},
+    {"name": "Lat Pulldown (Neutral/V-Bar)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.4, "Rear Delts": 0.3}, "equip": "Selectorized", "gentle": True},
+    {"name": "Lat Pulldown (Underhand)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.5}, "equip": "Selectorized", "gentle": True},
 
     # --- PLATE-LOADED ---
-    {"name": "Plate-Loaded Lat Pulldown", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.4, "Biceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
-    {"name": "Plate-Loaded Seated Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
-    {"name": "Plate-Loaded High Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.4}, "equip": "Plate-Loaded", "gentle": True},
-    {"name": "T-Bar Row (Chest Supported)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5}, "equip": "Plate-Loaded", "gentle": True},
+    {"name": "Plate-Loaded Lat Pulldown", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.4, "Biceps": 0.3}, "equip": "Plate-Loaded", "gentle": True},
+    {"name": "Plate-Loaded Seated Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.3}, "equip": "Plate-Loaded", "gentle": True},
+    {"name": "Plate-Loaded High Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.3}, "equip": "Plate-Loaded", "gentle": True},
+    {"name": "T-Bar Row (Chest Supported)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.3}, "equip": "Plate-Loaded", "gentle": True},
 
     # --- BARBELL & LANDMINE ---
-    {"name": "Barbell Row (Overhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.5}, "equip": "Barbell", "gentle": False},
-    {"name": "Barbell Row (Underhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.8, "Rear Delts": 0.4}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Row (Overhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.3}, "equip": "Barbell", "gentle": False},
+    {"name": "Barbell Row (Underhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.6, "Rear Delts": 0.4}, "equip": "Barbell", "gentle": False},
     {"name": "Meadows Row (Landmine)", "impact": {"Upper Back": 1.1}, "secondary": {"Rear Delts": 0.6}, "equip": "Barbell", "gentle": False},
     {"name": "Pendlay Row", "impact": {"Upper Back": 1.2}, "secondary": {"Hamstrings/Glutes": 0.4}, "equip": "Barbell", "gentle": False},
-    {"name": "T-Bar Row (Landmine/Old School)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5}, "equip": "Barbell", "gentle": False},
+    {"name": "T-Bar Row (Landmine/Old School)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.3}, "equip": "Barbell", "gentle": False},
 
     # --- SMITH MACHINE ---
     {"name": "Smith Machine Row (Overhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.4}, "equip": "Smith Machine", "gentle": True},
-    {"name": "Smith Machine Row (Underhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.8, "Rear Delts": 0.4}, "equip": "Smith Machine", "gentle": True},
+    {"name": "Smith Machine Row (Underhand Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.6, "Rear Delts": 0.4}, "equip": "Smith Machine", "gentle": True},
 
     # --- DUMBBELLS ---
-    {"name": "One-Arm Dumbbell Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5}, "equip": "Dumbbells", "gentle": False},
-    {"name": "Incline Dumbbell Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.5}, "equip": "Dumbbells", "gentle": True},
+    {"name": "One-Arm Dumbbell Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.3}, "equip": "Dumbbells", "gentle": False},
+    {"name": "Incline Dumbbell Row", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.3}, "equip": "Dumbbells", "gentle": True},
     {"name": "Dumbbell Pullover (Lat focus)", "impact": {"Upper Back": 1.0}, "secondary": {"Triceps": 0.3, "Pectorals": 0.2}, "equip": "Dumbbells", "gentle": True},
 
     # --- CABLES ---
-    {"name": "Single Arm Cable Row (Bottom Pulley)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.5}, "equip": "Cables", "gentle": True},
+    {"name": "Single Arm Cable Row (Bottom Pulley)", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.3}, "equip": "Cables", "gentle": True},
     {"name": "Straight Arm Cable Pulldown (Top Pulley)", "impact": {"Upper Back": 1.0}, "secondary": {"Triceps": 0.4}, "equip": "Cables", "gentle": True},
     {"name": "Cable Pullover (Lying on bench)", "impact": {"Upper Back": 1.0}, "secondary": {"Triceps": 0.3}, "equip": "Cables", "gentle": True},
 
     # --- BODYWEIGHT ---
-    {"name": "Pull-Ups (Wide Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.5}, "equip": "Bodyweight", "gentle": False},
+    {"name": "Pull-Ups (Wide Grip)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.5, "Biceps": 0.3}, "equip": "Bodyweight", "gentle": False},
     {"name": "Chin-Ups (Underhand)", "impact": {"Upper Back": 1.0, "Biceps": 1.0}, "secondary": {"Rear Delts": 0.3}, "equip": "Bodyweight", "gentle": False},
-    {"name": "Neutral Grip Pull-Ups", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.7, "Rear Delts": 0.5}, "equip": "Bodyweight", "gentle": False},
+    {"name": "Neutral Grip Pull-Ups", "impact": {"Upper Back": 1.0}, "secondary": {"Biceps": 0.5, "Rear Delts": 0.5}, "equip": "Bodyweight", "gentle": False},
     {"name": "Inverted Row (Aussie Pull-ups)", "impact": {"Upper Back": 1.0}, "secondary": {"Rear Delts": 0.6, "Biceps": 0.5}, "equip": "Bodyweight", "gentle": True},
 
     # ==========================================

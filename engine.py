@@ -13,11 +13,11 @@ class HITEngine:
         if self.days == 2:
             vol = 2
         elif self.days in [3, 4]:
-            vol = 4
+            vol = 3
         elif self.days == 5:
-            vol = 5
+            vol = 4
         else: 
-            vol = 6
+            vol = 4
             
         self.targets = {
             "Pectorals": vol, "Upper Back": vol, "Quads": vol, 
@@ -129,8 +129,7 @@ class HITEngine:
     def get_single_swap(self, current_name, all_week_exercise_names):
         """Finds the best alternative while strictly respecting gear and rep range."""
         
-        # 1. THE STRICT POOL (Fixed to prevent Arnold Press leak)
-        # Sanitizes "Dumbbell" vs "Dumbbells"
+        # 1. THE STRICT POOL
         user_gear = [g.lower().strip().rstrip('s') for g in self.equipment]
         pool = []
         for ex in MASTER_LIBRARY:
@@ -151,7 +150,7 @@ class HITEngine:
                 for m, val in ex_data.get('impact', {}).items():
                     if m in current_block_vol: current_block_vol[m] += val
                 for m, val in ex_data.get('secondary', {}).items():
-                    if m in current_block_vol: current_block_vol[m] += (val * 0.5)
+                    if m in current_block_vol: current_block_vol[m] += val
 
         # 2. Gap Analysis
         deficits = {m: self.targets[m] - current_block_vol[m] for m in self.targets}
