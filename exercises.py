@@ -24,13 +24,13 @@ MASTER_LIBRARY = [
 
     # --- SMITH MACHINE ---
     {"name": "Smith Machine Squat", "impact": {"Quads": 1.1}, "secondary": {"Hamstrings/Glutes": 0.4}, "equip": "Smith Machine", "gentle": True},
-    {"name": "Smith Machine Bulgarian Split Squat", "impact": {"Quads": 1.1}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Smith Machine", "gentle": True},
+    {"name": "Smith Machine Bulgarian Split Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.5}, "equip": "Smith Machine", "gentle": True},
     {"name": "Smith Machine Stepping Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Smith Machine", "gentle": True},
     {"name": "Smith Machine Stationary Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Smith Machine", "gentle": True},
 
     # --- DUMBBELLS ---
     {"name": "Dumbbell Goblet Squat", "impact": {"Quads": 1.0}, "secondary": {"Upper Back": 0.4}, "equip": "Dumbbells", "gentle": False},
-    {"name": "Dumbbell Bulgarian Split Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.7}, "equip": "Dumbbells", "gentle": False},
+    {"name": "Dumbbell Bulgarian Split Squat", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.5}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Walking Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.8}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Stationary Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Dumbbells", "gentle": False},
     {"name": "Dumbbell Stepping Lunges", "impact": {"Quads": 1.0}, "secondary": {"Hamstrings/Glutes": 0.6}, "equip": "Dumbbells", "gentle": False},
